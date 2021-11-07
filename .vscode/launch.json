@@ -1,0 +1,80 @@
+{
+    "configurations": [
+        {
+            "name": "Conexion Remota",
+            "type": "python",
+            "request": "attach",
+            "connect": {
+                "host": "127.0.0.1",
+                "port": 5890
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/.aws-sam/build/HelloWorldFunction",
+                    "remoteRoot": "/var/task"
+                }
+            ]
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "API miApp:HelloWorldFunction",
+            "invokeTarget": {
+                "target": "api",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "HelloWorldFunction"
+            },
+            "api": {
+                "path": "/hello",
+                "httpMethod": "get",
+                "payload": {
+                    "json": {}
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "invoca_json",
+            "invokeTarget": {
+                "target": "code",
+                "projectRoot": "${workspaceFolder}/hello_world",
+                "lambdaHandler": "app.lambda_handler"
+            },
+            "lambda": {
+                "runtime": "python3.9",
+                "payload": {
+                    "json": {
+                        "mensaje": "hola mundo"
+                    }
+                },
+                "environmentVariables": {}
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "invokeTarget": {
+                "target": "api",
+                "logicalId": "HelloWorldFunction",
+                "templatePath": "${workspaceFolder}/template.yaml"
+            },
+            "sam": {
+                "containerBuild": false,
+                "skipNewImageCheck": false
+            },
+            "api": {
+                "path": "/hello",
+                "httpMethod": "get"
+            },
+            "name": "invoca"
+        }
+    ]
+}
